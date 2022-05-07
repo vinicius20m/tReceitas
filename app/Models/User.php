@@ -86,7 +86,7 @@ class User extends Authenticatable
         'deleted_at'
     ] ;
 
-    public function setNameAttribrute($name)
+    public function setNameAttribute($name)
     {
 
         $this->attributes['name'] = $name ;
