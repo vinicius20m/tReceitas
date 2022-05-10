@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'slug',
         'email',
+        'about',
         'password',
     ];
 
@@ -70,13 +71,13 @@ class User extends Authenticatable
     public function followers()
     {
 
-        return $this->belongsToMany(User::class, 'user_followers', 'follower_id', 'user_id') ;
+        return $this->belongsToMany(User::class, 'user_followers', 'user_id', 'follower_id') ;
     }
 
     public function following()
     {
 
-        return $this->belongsToMany(User::class, 'user_followers', 'user_id', 'follower_id') ;
+        return $this->belongsToMany(User::class, 'user_followers', 'follower_id', 'user_id') ;
     }
 
     //
@@ -91,13 +92,36 @@ class User extends Authenticatable
 
         $this->attributes['name'] = $name ;
         $slug = Str::slug($name) ;
+        $myself = $this::find($this->id) ;
 
-        $occurrences = $this::withTrashed()->whereName($name)->get() ;
+        if($myself){
+
+            if($myself->name == $name)
+                return ;
+        }
+
+        $occurrences = $this::withTrashed()->whereName($name)->latest()->get() ;
         $count = $occurrences->count() ;
-        if($count > 0)
-            $slug .= '-'.($count+1) ;
+        if($count > 0){
+            if($count > 1)
+                $slug = $this::getSlug($occurrences->first()->slug, $slug) ;
+            else
+            if($occurrences->first()->slug == $slug)
+                $slug .= '-2' ;
+            else
+                $slug = $this::getSlug($occurrences->first()->slug, $slug) ;
+        }
+
 
         $this->attributes['slug'] = $slug ;
+    }
+
+    private static function getSlug($refSlug, $oriSlug)
+    {
+
+        $rrSlug = explode('-', $refSlug) ;
+        $c = (int)$rrSlug[count($rrSlug)-1] ;
+        return $oriSlug . '-'. ($c+1) ;
     }
 
     /**

@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{asset('constra/plugins/colorbox/colorbox.css')}}">
     <!-- Template styles-->
     <link rel="stylesheet" href="{{asset('constra/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('constra/css/app.css')}}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
@@ -127,17 +128,24 @@
                                                         <a id="navbarDropdown" style="font-size: 11px" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                                             {{ Auth::user()->name }}
                                                         </a>
-                        
+
                                                         <div class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="navbarDropdown">
-                                                            <a class="dropdown-item" style="font-size: 11px" href="{{ route('logout') }}"
-                                                               onclick="event.preventDefault();
-                                                                             document.getElementById('logout-form').submit();">
-                                                                {{ __('Logout') }}
-                                                            </a>
-                        
-                                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                                @csrf
-                                                            </form>
+
+                                                                <a class="dropdown-item" style="font-size: 11px"
+                                                                        href="{{ route('profile-show', Auth::user()->slug) }}"
+                                                                >
+                                                                Meu Perfil
+                                                                </a>
+
+                                                                <a class="dropdown-item" style="font-size: 11px" href="{{ route('logout') }}"
+                                                                onclick="event.preventDefault();
+                                                                                document.getElementById('logout-form').submit();">
+                                                                        {{ __('Logout') }}
+                                                                </a>
+
+                                                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                                        @csrf
+                                                                </form>
                                                         </div>
                                                     </li>
                                                 @endguest
@@ -286,6 +294,7 @@
 
                 <!-- Template custom -->
                 <script src="{{asset('constra/js/script.js')}}"></script>
+                <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
                 @yield('scripts')
 

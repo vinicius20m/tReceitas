@@ -1,0 +1,38 @@
+
+.slim-button {
+
+      padding: 1px 10px 1px;
+}
+
+div.simple-card{
+
+      background: #ffeec8a6;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* profile simple-menu */
+ul.profile-items {
+
+      list-style: none;
+      padding: 0px;
+}
+
+ul.profile-items li {
+
+      border-bottom: 2px solid #d9ac4c;
+}
+
+ul.profile-items li a {
+
+      display: block;
+      padding: 20px 0px 20px;
+      padding-left: 5px;
+}
+
+ul.profile-items li a:hover, ul.profile-items li a.selected-item {
+
+      color: #ffdc86;
+      font-size: 16px;
+      font-weight:bold;
+      border-left: 3px solid #ffdc86;
+}

@@ -10,13 +10,85 @@
             <h1 class="column-title col-md-4">{{$post->title}}</h1>
             <a class="col-md-1" style="margin-top: 17px; color: #ffb600"
                   href="{{
-                        route('home')
+                        route('begin')
                   }}"
             >Voltar</a>
       </div>
 
-      <div >
-            Por : &nbsp&nbsp <a href="" style="color: #ffb600">{{$post->user->name}}</a> &nbsp&nbsp&nbsp {{$post->created_at}}
+      <div class="row">
+
+            <div class="col-md-6" >
+                  Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a> &nbsp&nbsp&nbsp {{$post->created_at}}
+            </div>
+            <div class="col-md-6" >
+                  @auth
+                  @if (Auth::id() == $post->user_id)
+
+                  <button
+                        class="slim-button btn btn-outline-primary"
+                        onclick="window.location='{{route('post-edit', $post->slug)}}'"
+                  > <i class="bi bi-pencil-square"></i> Editar</button>
+                  <button
+                        data-target="#deletePostModal" data-toggle="modal"
+                        style="margin-left: 30px"
+                        class="slim-button btn btn-outline-danger"
+                  > <i class="bi bi-trash3-fill"></i> Excluir</button>
+
+                  <div class="modal fade" id="deletePostModal"
+                        tabIndex="-1" role="dialog" aria-hidden="true"
+                  >
+                        <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 600px">
+                              <div class="modal-content">
+                              <div style="background: #b54c4c" class="modal-header">
+                                    <h4 class="modal-title" id="modalLongTitle">Excluindo a Receita: <strong>{{$post->title}}</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                              </div>
+                              <div class="modal-body">
+
+                                    <h2 class="text-center">Tem certeza que deseja excluir esta Receita?</h2>
+                              </div>
+                              <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                    <button
+                                          type="button"
+                                          class="btn btn-danger"
+                                          data-dismiss="modal"
+                                          onclick="window.location=
+                                                '{{ route('post-destroy', $post->slug) }}'
+                                          "
+                                    >Sim</button>
+                              </div>
+                              </div>
+                        </div>
+                  </div>
+                  @else
+                  <div class="row">
+                        <div class="col-md-7">
+                              @if ($post->favorites->contains('id', Auth::id()))
+                              <button id="favorite-btn" class="btn btn-warning" onclick="Favorite(false)">Retirar Favorito</button>
+                              @else
+                              <button id="favorite-btn" class="btn btn-warning" onclick="Favorite(true)">Marcar Favorito</button>
+                              @endif
+                        </div>
+                        <div class="col-md-5">
+                              <button
+                                    id="like-btn"
+                                    onclick="Like()"
+                                    class="slim-button btn btn-outline-success"
+                              ><i class="bi bi-hand-thumbs-up"></i>Gostei</button>
+                              <button
+                                    id="dislike-btn"
+                                    onclick="Dislike()"
+                                    class="slim-button btn btn-outline-danger"
+                                    style="margin-left: 25px"
+                              ><i class="bi bi-hand-thumbs-down"></i>Não Gostei</button>
+                        </div>
+                  </div>
+                  @endif
+                  @endauth
+            </div>
       </div>
 
       <div class="gap-40"></div>
@@ -62,10 +134,13 @@
 
                   <div class="gap-40"></div>
 
+                  @if ($post->portions > 0)
+
                   <div class="row">
                         <h3 style="left: 43%; position: relative;">rende</h3>
                   </div>
                   <a href="" style="font-size: 34px; color:#ffb600; margin-left: 10px">{{$post->portions}} {{$post->portions > 1 ? 'Porções' : 'Porção'}}</a>
+                  @endif
             </div>
       </div>
 
@@ -81,6 +156,7 @@
       <div style="justify-content: center;" class="form-group row">
             <div class="col-md-11" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
 
+                  @if ($post->tags->count() > 0)
                   <h3 style="padding-top: 20px" class="text-center"><i class="bi bi-tags"></i> Tags</h3>
 
                   <div style="
@@ -96,12 +172,13 @@
 
                               @foreach ($post->tags as $tag)
                               <button
-                                    style="border-radius: 20px; margin: 5px; padding-top:2px; padding-bottom:2px;"
-                                    class="btn btn-outline-warning"
+                                    style="border-radius: 20px; margin: 5px;"
+                                    class="btn btn-outline-warning slim-button"
                               >{{$tag->title}}</button>
                               @endforeach
                         </div>
                   </div>
+                  @endif
 
                   @if (!empty($post->description))
 
@@ -248,7 +325,7 @@
       <div class="text-right"><br>
             <a class="col-md-1" style="color: #ffb600"
                   href="{{
-                        route('home')
+                        route('begin')
                   }}"
             >Voltar</a>
       </div>
@@ -262,4 +339,98 @@
 
 @section('scripts')
       <script src="{{asset('constra/js/postScripts.js')}}"></script>
+
+      <script>
+            var c1 = 0
+            var v1
+            function Favorite(value)
+            {
+
+                  if(c1 > 0){
+                        value = !v1
+                        v1 = !v1
+                  }
+                  else
+                        v1 = value
+
+                  $('#favorite-btn').text(!value?'Marcar Favorito':'Retirar Favorito')
+
+                  axios.post('{{route('favorite')}}', {
+
+                        'user_id' : {{Auth::id()}},
+                        'post_id' : {{$post->id}}
+                  }).then((response) => {
+
+                        console.log(response.data)
+                  })
+                  .catch(function (error) {
+                        console.log(error);
+                  })
+                  c1 ++
+            }
+
+            function Like()
+            {
+
+                  let dBtn_i = $('#dislike-btn').children()
+                  let lBtn_i = $('#like-btn').children()
+                  let remove = lBtn_i.attr('class').includes("fill")
+
+//                HERE I SWITCH THE BUTTON ICONS
+                  lBtn_i.toggleClass('bi-hand-thumbs-up')
+                  lBtn_i.toggleClass('bi-hand-thumbs-up-fill')
+                  if(dBtn_i.attr('class').includes("fill")){
+
+                        dBtn_i.toggleClass('bi-hand-thumbs-down')
+                        dBtn_i.toggleClass('bi-hand-thumbs-down-fill')
+                  }
+
+
+                  axios.post('{{route('like')}}', {
+
+                        'user_id' : {{Auth::id()}},
+                        'post_id' : {{$post->id}},
+                        'value' : true,
+                        'remove' : remove ,
+                  }).then((response) => {
+
+                        console.log(response.data)
+                  })
+                  .catch(function (error) {
+                        console.log(error);
+                  })
+            }
+
+            function Dislike()
+            {
+                  let lBtn_i = $('#like-btn').children()
+                  let dBtn_i = $('#dislike-btn').children()
+                  let remove = dBtn_i.attr('class').includes("fill")
+
+//                HERE I SWITCH THE BUTTON ICONS
+                  dBtn_i.toggleClass('bi-hand-thumbs-down')
+                  dBtn_i.toggleClass('bi-hand-thumbs-down-fill')
+                  if(lBtn_i.attr('class').includes("fill")){
+
+                        lBtn_i.toggleClass('bi-hand-thumbs-up')
+                        lBtn_i.toggleClass('bi-hand-thumbs-up-fill')
+                  }
+
+
+
+                  axios.post('{{route('like')}}', {
+
+                        'user_id' : {{Auth::id()}},
+                        'post_id' : {{$post->id}},
+                        'value' : false,
+                        'remove' : remove ,
+                  }).then((response) => {
+
+                  console.log(response.data)
+                  })
+                  .catch(function (error) {
+                  console.log(error);
+                  })
+            }
+      </script>
 @endsection

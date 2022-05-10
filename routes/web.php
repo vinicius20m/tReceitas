@@ -20,7 +20,15 @@ use Illuminate\Support\Facades\Auth ;
 
 Route::namespace('App\Http\Controllers')->group(function() {
 
-    Route::get('/', 'HomeController@home') ;
+    Route::get('/', 'HomeController@home')->name('begin') ;
+
+    // PROFILE
+    Route::get('perfil/{user:slug}', 'ProfileController@show' )->name('profile-show') ;
+    Route::get('meu-perfil/minhas-receitas', 'ProfileController@posts' )->name('profile-posts') ;
+    Route::get('meu-perfil/favoritas', 'ProfileController@favorites' )->name('profile-favorites') ;
+    Route::get('meu-perfil/seguindo', 'ProfileController@following' )->name('profile-following') ;
+    Route::post('perfil/editando-perfil/{user:slug}', 'ProfileController@update')->name('profile-update') ;
+    Route::get('perfil/excluindo-perfil/{user:slug}', 'ProfileController@destroy')->name('profile-destroy') ;
 
     // CATEGORY
     Route::get('categorias', 'CategoryController@index' )->name('category') ;

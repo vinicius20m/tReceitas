@@ -88,12 +88,40 @@ class Post extends Model
 
         $this->attributes['title'] = $title ;
         $slug = Str::slug($title) ;
+        $myself = $this::find($this->id) ;
 
-        $occurrences = $this::withTrashed()->whereTitle($title)->get() ;
+        if($myself){
+
+            if($myself->title == $title){
+
+                // $this->attributes['slug'] = $slug ;
+                return ;
+            }
+        }
+
+        $occurrences = $this::withTrashed()->whereTitle($title)->latest()->get() ;
         $count = $occurrences->count() ;
-        if($count > 0)
-            $slug .= '-'.($count+1) ;
+        // dd($occurrences) ;
+        if($count > 0){
+            if($count > 1)
+                $slug = $this::getSlug($occurrences->first()->slug, $slug) ;
+            else
+            if($occurrences->first()->slug == $slug)
+                $slug .= '-2' ;
+            else
+                $slug = $this::getSlug($occurrences->first()->slug, $slug) ;
+        }
+
 
         $this->attributes['slug'] = $slug ;
+    }
+
+    private static function getSlug($refSlug, $oriSlug)
+    {
+
+        $rrSlug = explode('-', $refSlug) ;
+        $c = (int)$rrSlug[count($rrSlug)-1] ;
+        // dd($c) ;
+        return $oriSlug . '-'. ($c+1) ;
     }
 }

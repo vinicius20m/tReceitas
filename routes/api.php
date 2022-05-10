@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::namespace('App\Http\Controllers')->group(function() {
+
+    Route::post('seguir/', 'UserInteractionsController@follow')->name('follow') ;
+
+    Route::post('favorito/', 'UserInteractionsController@favorite')->name('favorite') ;
+
+    Route::post('gostei/', 'UserInteractionsController@like')->name('like') ;
+}) ;

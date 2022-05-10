@@ -2,12 +2,19 @@
 
 @section('content')
 
+@php
+$iC = 0 ;
+$isC = 0 ;
+$pC = 0 ;
+$psC = 0 ;
+@endphp
+
 <div class="gap-40"></div>
 
 <div class="row">
       <div class="col-md-12">
       <div class="row">
-            <h1 class="column-title col-md-4">Nova Receita</h1>
+            <h1 class="column-title col-md-4">Editando Receita</h1>
             <a class="col-md-1" style="margin-top: 17px; color: #ffb600"
                   href="{{
                         route('begin')
@@ -43,7 +50,7 @@
       </div>
 
       {{-- CREATE FORM --}}
-      <form id="contact-form" action="{{ route('post-store') }}" method="post" role="form">
+      <form id="contact-form" action="{{ route('post-update', $post->slug) }}" method="post" role="form">
             @csrf
             <div style="padding: 0px" class="form-group row">
                   <div  class="col-md-8">
@@ -51,7 +58,7 @@
                               <label>Titulo <span style="@error('title') color: red @enderror">*</span> </label>
                               <input id="title" name="title"
                                     class="form-control form-control-title @error('title') is-invalid @enderror"
-                                    value="{{ old('title') }}" placeholder="Titulo/Nome da Receita"
+                                    value="{{ old('title') ?? $post->title }}" placeholder="Titulo/Nome da Receita"
                                     type="text" autofocus required
                               >
                               @error('title')
@@ -69,7 +76,7 @@
                                           @foreach ($categories as $category)
 
                                           <option value="{{$category->id}}"
-                                                @if(old('category_id') == $category->id) selected @endif
+                                                @if(old('category_id') == $category->id || $post->category_id == $category->id) selected @endif
                                           >{{$category->title}}</option>
                                           @endforeach
                                     </select>
@@ -81,7 +88,7 @@
                               <div class="col-md-3">
                                     <label>Porções</label>
                                     <input name="portions" class="form-control"
-                                          type="number" value="{{old('portions')}}"
+                                          type="number" value="{{old('portions') ?? $post->portions}}"
                                     >
                               </div>
 
@@ -89,7 +96,7 @@
                                     <label>Receita Privada?</label>
                                     <input name="private" class="form-control"
                                           type="checkbox" value="1"
-                                          @if(old('private')) checked @endif
+                                          @if(old('private') || $post->private) checked @endif
                                     >
                               </div>
                         </div>
@@ -103,7 +110,7 @@
                               <textarea class="form-control form-control-description @error('description') is-invalid @enderror"
                                     name="description" id="description" placeholder="Breve Descrição da Receita"
                                     style="min-height: 70px" type="text"
-                              >{{ old('description') }}</textarea>
+                              >{{ old('description') ?? $post->description }}</textarea>
                         </div>
 
                   </div>
@@ -112,7 +119,10 @@
                         <select style="min-height: 278px" class="form-control" name="tags[]" id="tags" multiple>
                               @foreach ($tags as $tag)
 
-                              <option value="{{$tag->id}}">{{$tag->title}}</option>
+                              <option
+                                    @if($post->tags->contains('id', $tag->id)) selected @endif
+                                    value="{{$tag->id}}"
+                              >{{$tag->title}}</option>
                               @endforeach
                         </select>
                   </div>
@@ -139,7 +149,11 @@
                         <h3 class="text-center"><i class="bi bi-basket"></i> Ingredientes</h3>
 
                         <div id="ingredients">
-                              <div class="ingredient-stage" id="ingredient-stage-1" style="
+                              @foreach ($ingredients as $ingredient)
+                              @php
+                                    $iC ++
+                              @endphp
+                              <div class="ingredient-stage" id="ingredient-stage-{{$iC}}" style="
                                     border: 2px solid;
                                     border-radius: 15px;
                                     border-color: #ffd66d;
@@ -155,7 +169,7 @@
                                           place-items:center;
                                           overflow:hidden
                                     ">
-                                          <input name="ingredientTitle[1]" type="text"
+                                          <input name="ingredientTitle[{{$iC}}]" type="text"
                                                 class="text-center form-control"
                                                 style="
                                                       border-top-left-radius: 13px;
@@ -164,29 +178,35 @@
                                                       font-size: 30px;
                                                       background: #fff9aba1
                                                 "
-                                                placeholder="Ex: Cobertura"
+                                                value="{{$ingredient->title}}"
                                           >
-                                          <a href="#ingredient-stage-1" class="close" data-dismiss="alert" aria-label="close"
+                                          <a href="#ingredient-stage-{{$iC}}" class="close" data-dismiss="alert" aria-label="close"
                                                 id="hide" style="position: absolute; left: 94%; font-size: 35px;"
                                           >&times;</a>
                                     </div>
 
                                     <div class="gap-40"></div>
 
-                                    <ul id="ingredient-1-steps">
-                                          <li style="margin-bottom: 10px" class="ingredient-1-step" id="ingredient-1-step-98">
+                                    <ul id="ingredient-{{$iC}}-steps">
+                                          @foreach ($ingredient->steps as $step)
+                                          @php
+                                                $isC ++
+                                          @endphp
+                                          <li style="margin-bottom: 10px" class="ingredient-{{$iC}}-step" id="ingredient-{{$iC}}-step-{{$isC}}">
                                                 <div class="row">
 
-                                                      <input name="ingredient-step[1][]"
+                                                      <input name="ingredient-step[{{$iC}}][]"
                                                             type="text"
                                                             class="form-control"
                                                             style="max-width: 600px; margin-left: 15px"
+                                                            value="{{$step->content}}"
                                                       >
-                                                      <a href="#ingredient-1-step-98" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#ingredient-{{$iC}}-step-{{$isC}}" class="close" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>
                                           </li>
+                                          @endforeach
                                     </ul>
 
                                     <button
@@ -195,12 +215,13 @@
                                                 margin-bottom: 10px;
                                           "
                                           class="btn btn-outline-warning"
-                                          onclick="AddIngredientStep(1)"
+                                          onclick="AddIngredientStep({{$iC}})"
                                           type="button"
                                     >+</button>
 
                                     <div class="gap-20" style="border-top: 2px solid; border-color: #ffd66d;"></div>
                               </div>
+                              @endforeach
                         </div>
 
                         <button
@@ -238,7 +259,11 @@
                         <h3 class="text-center"><i class="bi bi-hammer"></i> Modo de Preparo</h3>
 
                         <div id="preparations">
-                              <div class="preparation-stage" id="preparation-stage-1" style="
+                              @foreach ($preparations as $preparation)
+                              @php
+                                    $pC ++
+                              @endphp
+                              <div class="preparation-stage" id="preparation-stage-{{$pC}}" style="
                                     border: 2px solid;
                                     border-radius: 15px;
                                     border-color: #ffd66d;
@@ -254,7 +279,7 @@
                                           place-items:center;
                                           overflow:hidden
                                     ">
-                                          <input name="preparationTitle[1]" type="text"
+                                          <input name="preparationTitle[{{$pC}}]" type="text"
                                                 class="text-center form-control"
                                                 style="
                                                       border-top-left-radius: 13px;
@@ -263,28 +288,35 @@
                                                       font-size: 30px;
                                                       background: #fff9aba1
                                                 "
+                                                value="{{$preparation->title}}"
                                           >
-                                          <a href="#preparation-stage-1" class="close" data-dismiss="alert" aria-label="close"
+                                          <a href="#preparation-stage-{{$pC}}" class="close" data-dismiss="alert" aria-label="close"
                                                 id="hide" style="position: absolute; left: 94%; font-size: 35px;"
                                           >&times;</a>
                                     </div>
       
                                     <div class="gap-40"></div>
       
-                                    <ol id="preparation-1-steps">
-                                          <li style="margin-bottom: 10px" class="preparation-1-step" id="preparation-1-step-98">
+                                    <ol id="preparation-{{$pC}}-steps">
+                                          @foreach ($preparation->steps as $step)
+                                          @php
+                                                $psC ++
+                                          @endphp
+                                          <li style="margin-bottom: 10px" class="preparation-{{$pC}}-step" id="preparation-{{$pC}}-step-{{$psC}}">
                                                 <div class="row">
       
-                                                      <input name="preparation-step[1][]"
+                                                      <input name="preparation-step[{{$pC}}][]"
                                                             type="text"
                                                             class="form-control"
                                                             style="max-width: 600px; margin-left: 15px"
+                                                            value="{{$step->content}}"
                                                       >
-                                                      <a href="#preparation-1-step-98" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#preparation-{{$pC}}-step-{{$psC}}" class="close" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>
                                           </li>
+                                          @endforeach
                                     </ol>
       
                                     <button
@@ -293,12 +325,13 @@
                                                 margin-bottom: 10px;
                                           "
                                           class="btn btn-outline-warning"
-                                          onclick="AddPreparationStep(1)"
+                                          onclick="AddPreparationStep({{$pC}})"
                                           type="button"
                                     >+</button>
       
                                     <div class="gap-20" style="border-top: 2px solid; border-color: #ffd66d;"></div>
                               </div>
+                              @endforeach
                         </div>
       
                         <button
@@ -326,7 +359,7 @@
                               route('begin')
                         }}"
                   >Voltar</a>
-                  <button class="btn btn-primary solid blank" type="submit">Criar</button>
+                  <button class="btn btn-primary solid blank" type="submit">Editar</button>
             </div>
       </form>
       </div>
