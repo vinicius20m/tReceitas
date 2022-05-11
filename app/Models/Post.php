@@ -50,18 +50,18 @@ class Post extends Model
         return $this->hasMany(Notification::class) ;
     }
 
+    public function comments()
+    {
+
+        return $this->hasMany(Comment::class) ;
+    }
+
     // MANY TO MANY
 
     public function tags()
     {
 
         return $this->belongsToMany(Tag::class, 'post_tags') ;
-    }
-
-    public function comments()
-    {
-
-        return $this->belongsToMany(User::class, 'post_comments')->withPivot(['content']) ;
     }
 
     public function likes()

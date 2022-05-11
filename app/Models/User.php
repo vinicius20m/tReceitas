@@ -42,13 +42,13 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class) ;
     }
 
-    // MANY TO MANY
-
-    public function commentedPosts()
+    public function comments()
     {
 
-        return $this->belongsToMany(Post::class, 'post_comments')->withPivot(['content']) ;
+        return $this->hasMany(Comment::class) ;
     }
+
+    // MANY TO MANY
 
     public function likedPosts()
     {

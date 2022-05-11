@@ -10,6 +10,16 @@ div.simple-card{
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
+div.simple-container{
+
+      border: 2px solid;
+      border-radius: 15px;
+      border-color: #ffd66d;
+      background: #f6fdff;
+      margin-bottom: 40px;
+      box-shadow: inset 5px 11px 9px 3px rgb(197 202 205 / 84%);
+}
+
 /* profile simple-menu */
 ul.profile-items {
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,41 @@ class UserInteractionsController extends Controller
         return response()->json([
 
             'message' => $remove?'Neutro':($value?'Gostei':'Não Gostei'),
+        ], 200) ;
+    }
+
+    public function comment(Request $request)
+    {
+
+        $post = $request->all() ;
+
+        $comment = Comment::create($post) ;
+
+        return response()->json([
+
+            'message' => 'sucesso',
+            'content' => $comment->content,
+            'comment_id' => $comment->id
+        ], 200) ;
+    }
+
+    public function commentRemove(Request $request)
+    {
+
+        $user_id = $request->get('user_id') ;
+        $comment_id = $request->get('comment_id') ;
+
+        $comment = Comment::find($comment_id) ;
+        if($comment->user->id == $user_id)
+            $comment->delete() ;
+        else return response()->json([
+
+            'message' => 'acesso negado',
+        ], 400) ;
+
+        return response()->json([
+
+            'message' => 'sucesso',
         ], 200) ;
     }
 }

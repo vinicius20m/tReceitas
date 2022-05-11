@@ -73,17 +73,32 @@
                               @endif
                         </div>
                         <div class="col-md-5">
+                              @php
+
+                                    $like = $post->likes()
+                                          ->wherePivot('value', '=', 1)
+                                          ->where('user_id', '=', Auth::id())
+                                          ->count()
+                                    ;
+
+                                    $dislike = $post->likes()
+                                          ->wherePivot('value', '=', 0)
+                                          ->where('user_id', '=', Auth::id())
+                                          ->count()
+                                    ;
+                              @endphp
+
                               <button
                                     id="like-btn"
                                     onclick="Like()"
                                     class="slim-button btn btn-outline-success"
-                              ><i class="bi bi-hand-thumbs-up"></i>Gostei</button>
+                              ><i class="bi bi-hand-thumbs-up{{$like?'-fill':''}}"></i>Gostei</button>
                               <button
                                     id="dislike-btn"
                                     onclick="Dislike()"
                                     class="slim-button btn btn-outline-danger"
                                     style="margin-left: 25px"
-                              ><i class="bi bi-hand-thumbs-down"></i>Não Gostei</button>
+                              ><i class="bi bi-hand-thumbs-down{{$dislike?'-fill':''}}"></i>Não Gostei</button>
                         </div>
                   </div>
                   @endif
@@ -145,11 +160,13 @@
       </div>
 
       {{-- ------------------------------------------------------------------------------------------------------ --}}
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
 
 
       <div class="gap-40"></div>
       <div class="gap-20"></div>
 
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
       {{-- ------------------------------------------------------------------------------------------------------ --}}
 
 
@@ -201,8 +218,9 @@
             </div>
       </div>
 
+      <hr>
       <div class="gap-40"></div>
-      <div class="gap-40"></div>
+      {{-- <div class="gap-40"></div>--}}
 
 
 
@@ -322,13 +340,92 @@
             </div>
       </div>
 
-      <div class="text-right"><br>
-            <a class="col-md-1" style="color: #ffb600"
-                  href="{{
-                        route('begin')
-                  }}"
-            >Voltar</a>
+
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
+
+
+      <div class="gap-20"></div>
+      <hr>
+      <div class="gap-20"></div>
+
+
+
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
+      {{-- ------------------------------------------------------------------------------------------------------ --}}
+
+
+
+      <div style="justify-content: center" class="row">
+            <div class="simple-card col-md-11">
+                  <div class="gap-40"></div>
+                  <h3 class="text-center"><i class="bi bi-chat-square-text"></i> Comentários</h3>
+                  <div class="gap-40"></div>
+                  <div class="row" style="justify-content: center">
+                        <div  class="col-md-11">
+                              <div class="row">
+                                    <div class="col-md-3">
+
+                                          <label style="margin-left: 20px; font-weight:bold">Escreva um Comentário</label>
+                                    </div>
+                                    <div class="col-md-7"></div>
+                                    <div class="col-md-2">
+                                          <button onclick="Comment()" class="slim-button btn btn-primary">Enviar</button>
+                                    </div>
+                              </div>
+                              <textarea id="comment-content"
+                                    style="font-size: 20px" rows="4"
+                                    class="form-control"
+                                    placeholder="Deixe sua opnião sobre a Receita..."
+                              ></textarea>
+                        </div>
+                  </div>
+                  <div class="gap-20"></div>
+                  <hr style="background: rgb(63, 63, 63)">
+                  <div class="gap-40"></div>
+                  <div class="row" style="justify-content: center">
+                        <div id="comments" class="col-md-11">
+
+                              @foreach ($post->comments->sortByDesc('created_at') as $comment)
+
+                              <div id="comment-{{$comment->id}}">
+                                    <div style="margin-right: 19px" class="text-right">
+
+                                          <a href="{{route('profile-show', $comment->user->slug)}}"
+                                                style="color: #ffb600; font-size:19px"
+                                          >
+                                                {{$comment->user->name}} @if($comment->user->id == $post->user->id)
+                                                <i class="bi bi-award-fill"></i>@endif
+                                          </a>
+                                    </div>
+                                    <div class="simple-container">
+                                          <div class="gap-20 text-right">
+
+                                                @if ($comment->user->id == Auth::id())
+                                                <a href="#comment-{{$comment->id}}"
+                                                      class="close" data-dismiss="alert"
+                                                      aria-label="close" id="hide"
+                                                      style="
+                                                            margin-left: 40px;
+                                                            font-size: 30px;
+                                                            position: absolute;
+                                                            right: 2.7%;
+                                                      "
+                                                      onclick="RemoveComment({{$comment->id}})"
+                                                >&times;</a>
+                                                @endif
+                                          </div>
+                                          <h4 class="text-center">{{$comment->content}}</h4>
+                                    </div>
+
+                                    <hr style="background: #ffd66d">
+                              </div>
+                              @endforeach
+                        </div>
+                  </div>
+            </div>
       </div>
+
       </div>
 
 </div><!-- Content row -->
@@ -341,6 +438,7 @@
       <script src="{{asset('constra/js/postScripts.js')}}"></script>
 
       <script>
+
             var c1 = 0
             var v1
             function Favorite(value)
@@ -362,8 +460,7 @@
                   }).then((response) => {
 
                         console.log(response.data)
-                  })
-                  .catch(function (error) {
+                  }).catch(function (error) {
                         console.log(error);
                   })
                   c1 ++
@@ -395,8 +492,7 @@
                   }).then((response) => {
 
                         console.log(response.data)
-                  })
-                  .catch(function (error) {
+                  }).catch(function (error) {
                         console.log(error);
                   })
             }
@@ -417,7 +513,6 @@
                   }
 
 
-
                   axios.post('{{route('like')}}', {
 
                         'user_id' : {{Auth::id()}},
@@ -426,10 +521,83 @@
                         'remove' : remove ,
                   }).then((response) => {
 
-                  console.log(response.data)
+                        console.log(response.data)
+                  }).catch(function (error) {
+                        console.log(error);
                   })
-                  .catch(function (error) {
-                  console.log(error);
+            }
+
+            function Comment()
+            {
+
+                  let content = $('#comment-content').val()
+
+                  if(content) axios.post('{{route('comment')}}', {
+
+                        'user_id' : {{Auth::id()}},
+                        'post_id' : {{$post->id}},
+                        'content' : content
+                  }).then((response) => {
+
+                        console.log(response.data)
+                        $('#comment-content').val('')
+                        AddComment(response.data.comment_id, response.data.content)
+                  }).catch(function (error) {
+                        console.log(error);
+                  })
+            }
+
+            function AddComment(id, content)
+            {
+
+                  $('#comments').prepend(`
+                        <div id="comment-${id}">
+                              <div style="margin-right: 19px" class="text-right">
+
+                                    <a href="{{route('profile-show', Auth::user()->slug)}}"
+                                          style="color: #ffb600; font-size:19px"
+                                    >
+                                          {{Auth::user()->name}} @if(Auth::id() == $post->user->id)
+                                          <i class="bi bi-award-fill"></i>@endif
+                                    </a>
+                              </div>
+                              <div class="simple-container">
+                                    <div class="gap-20 text-right">
+
+
+                                          <a href="#comment-${id}"
+                                                class="close" data-dismiss="alert"
+                                                aria-label="close" id="hide"
+                                                style="
+                                                      margin-left: 40px;
+                                                      font-size: 30px;
+                                                      position: absolute;
+                                                      right: 2.7%;
+                                                "
+                                                onclick="RemoveComment(${id})"
+                                          >&times;</a>
+
+                                    </div>
+                                    <h4 class="text-center">${content}</h4>
+                              </div>
+
+                              <hr style="background: #ffd66d">
+                        </div>
+                  `)
+            }
+
+            function RemoveComment(id)
+            {
+
+                  axios.post('{{route('comment-remove')}}', {
+
+                        'user_id' : {{Auth::id()}},
+                        'comment_id' : id
+                  }).then((response) => {
+
+                        console.log(response.data)
+                  }).catch(function (error) {
+                        console.log(error);
                   })
             }
       </script>

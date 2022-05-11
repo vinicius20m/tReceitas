@@ -25,4 +25,7 @@ Route::namespace('App\Http\Controllers')->group(function() {
     Route::post('favorito/', 'UserInteractionsController@favorite')->name('favorite') ;
 
     Route::post('gostei/', 'UserInteractionsController@like')->name('like') ;
+
+    Route::post('comentario/', 'UserInteractionsController@comment')->name('comment') ;
+    Route::post('remover-comentario/', 'UserInteractionsController@commentRemove')->name('comment-remove') ;
 }) ;
