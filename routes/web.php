@@ -50,6 +50,7 @@ Route::namespace('App\Http\Controllers')->group(function() {
     Route::get('receita/{post:slug}', 'PostController@show' )->name('post-show') ;
     Route::get('receitas', 'PostController@index' )->name('post') ;
     Route::get('receitas/nova-receita', 'PostController@create')->name('post-create') ;
+    Route::post('teste', 'PostController@teste')->name('teste') ;
     Route::post('receitas/salvando-receita', 'PostController@store')->name('post-store') ;
     Route::get('receitas/editar-receita/{post:slug}', 'PostController@edit')->name('post-edit') ;
     Route::post('receitas/editando-receita/{post:slug}', 'PostController@update')->name('post-update') ;

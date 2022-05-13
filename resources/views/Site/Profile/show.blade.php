@@ -30,6 +30,12 @@
       <h1> {{$user->name}} </h1>
 </div>
 
+@if($user->about)
+<div>
+      <h4>{{$user->about}}</h4>
+</div>
+@endif
+
 <div class="gap-40"></div>
 
 <div style="justify-content: center;" class="form-group row">

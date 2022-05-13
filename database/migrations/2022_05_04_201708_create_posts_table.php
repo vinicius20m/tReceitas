@@ -22,6 +22,7 @@ class CreatePostsTable extends Migration
             $table->boolean('private')->default(0) ;
             $table->foreignId('user_id')->constrained() ;
             $table->foreignId('category_id')->constrained() ;
+            $table->text('image')->nullable() ;
             $table->timestamps();
             $table->softDeletes() ;
         });

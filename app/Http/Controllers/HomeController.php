@@ -31,11 +31,12 @@ class HomeController extends Controller
     public function home()
     {
 
-        $posts = Post::all() ;
+        $posts = Post::latest()->get() ;
 
         return view('Site.index', [
 
-            'posts' => $posts
+            'posts' => $posts,
+            'mainTitle' => 'Ultimas Adicionadas'
         ]);
     }
 }

@@ -43,6 +43,36 @@ ul.profile-items li a:hover, ul.profile-items li a.selected-item {
 
       color: #ffdc86;
       font-size: 16px;
-      font-weight:bold;
+      font-weight:300;
+}
+
+ul.profile-items li a.selected-item{
+
       border-left: 3px solid #ffdc86;
+}
+
+/* ACCORDION STYLE */
+
+.header-img img {
+
+      transition: all 0.3s ease-out;
+      position: relative;
+}
+.header-img img:hover {
+
+      transform: scale(1.2, 1.2);
+      z-index: 9;
+}
+
+.header-img {
+
+      cursor: pointer;
+      transition: all 0.3s ease-out;
+      position: relative;
+      z-index: 1;
+}
+.header-img:hover {
+
+      transform: scale(1.15, 1.15);
+      z-index: 9;
 }

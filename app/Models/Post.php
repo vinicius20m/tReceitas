@@ -19,7 +19,8 @@ class Post extends Model
         'portions',
         'private',
         'category_id',
-        'user_id'
+        'user_id',
+        'image'
     ] ;
 
     // BELONGS TO

@@ -1,8 +1,6 @@
 @extends('Layouts.modelo2')
 
 @section('content')
-<h1> Hello World </h1>
-<h2>teste do teste</h2>
 
 <div class="error-container">
 
@@ -31,13 +29,105 @@
       @endif
 </div>
 
-@foreach ($posts as $post)
-
-<div class="row">
-
-      <a href="{{route('post-show', $post->slug)}}">{{$post->title}}</a>
-      <div class="gap-20"></div>
+<div class="col-md-12 text-center">
 </div>
 
-@endforeach
+<div class="col-md-3 text-center">
+      <i style="font-size: 80px; margin-right: 100px" class="bi bi-book-half"></i>
+</div>
+<div class="col-md-8 text-center">
+      <h2>{{$mainTitle}}</h2>
+      <div class="gap-20"></div>
+      <div class="row simple-card">
+            <div class="col-md-1">
+
+                  <i class="bi bi-search"></i>
+            </div>
+            <div class="col-md-11">
+
+                  <input class="form-control" type="text">
+            </div>
+      </div>
+</div>
+<div class="gap-40"></div>
+
+<div class="simple-card col-md-2"></div>
+<div class="col-md-2"></div>
+
+<div class="simple-card col-md-8">
+      <div style="padding: 30px">
+
+      <div class="accordion" id="accordion">
+
+            @foreach ($posts as $post)
+
+            <div style="border-radius: 10px;" class="accordion-item">
+
+                  <div class="accordion-header row" id="heading_{{$post->id}}">
+                        <div onclick="window.location='{{route('post-show', $post->slug)}}'" style="padding: 0px; margin-right: 10px; overflow: hidden; border: 2px solid #ffd66d; border-radius: 10px; box-shadow: inset 0px 0px 122px 33px rgba(0,0,0,0.78);" class="col-md-3 header-img">
+                              @if($post->image)
+                              <img src="{{asset('images/posts\\'. $post->image)}}" width="100%"
+                                    style=" border: 2px solid #ffd66d; border-radius: 10px; box-shadow: inset 0px 0px 122px 33px rgba(0,0,0,0.78);" alt="Sem Foto"
+                              >
+                              @else
+                              <h4 style="color: antiquewhite; margin-top:40px;" class="text-center">sem foto</h4>
+                              @endif
+                        </div>
+
+                        <button type="button" class="accordion-button collapsed col-md-9 row"
+                              data-bs-toggle="collapse" data-bs-target="#collapse_{{$post->id}}"
+                              aria-expanded="false" aria-controls="collapse_{{$post->id}}"
+                              style="padding-bottom: 0px; padding-left: 0px; border: 2px solid #c3a047; border-radius: 0px 10px 10px 0px;"
+                        >
+                        <div class="row">
+                              <div class="col-md-8">
+
+                                    <p style="font-size: 25px; font-weight: 600; color:#ffb600">{{$post->title}}</p>
+                              </div>
+                              <div style="padding-right: 0px; padding-left: 35px" class="col-md-4 row">
+                                    <div style="padding: 0px" class="col-md-6">
+                                          <i class="bi bi-hand-thumbs-up"
+                                                style="color: #ffb600; font-size: 26px;"
+                                          ></i>
+                                          <span style="font-size: 20px; font-weight: 200;">&nbsp&nbsp{{$post->likes()->wherePivot('value', '=', 1)->count()}}</span>
+                                    </div>
+                                    <div style="padding: 0px" class="col-md-6">
+                                          <i class="bi bi-hand-thumbs-down"
+                                                style="color: #ffb600; font-size: 26px;"
+                                          ></i>
+                                          <span style="font-size: 20px; font-weight: 200;">&nbsp&nbsp{{$post->likes()->wherePivot('value', '=', 0)->count()}}</span>
+                                    </div>
+                              </div>
+                        </div>
+                        <div class="row">
+                              <div style="padding-right: 0px" class="col-md-3">
+                                    <h4 style="margin: 0px" class="text-center">Rende: &nbsp&nbsp <span style="color:#ffb600">{{$post->portions}}</span></h4>
+                              </div>
+                              <div class="col-md-3 text-center">
+                                    <h4 style="margin: 0px">categoria: </h4>
+                              </div>
+                              <div class="col-md-6">
+                                    <span style="color:#ffb600; font-size: 20px; font-weight: 600">&nbsp&nbsp{{$post->category->title}}</span>
+                              </div>
+                        </div>
+                        </button>
+                  </div>
+                  <div id="collapse_{{$post->id}}" class="accordion-collapse collapse"
+                        aria-labelledby="heading_{{$post->id}}" data-bs-parent="#accordion"
+                  >
+                        <div class="accordion-body">
+                              <h4 class="text-center">
+                                    {{$post->description}}
+                              </h4>
+                              {{-- <div class="gap-20"></div> --}}
+                              <p style="margin: 0px">Publicada Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a> &nbsp&nbsp&nbsp {{$post->created_at}}</p>
+                        </div>
+                  </div>
+            </div>
+            <div class="gap-20"></div>
+            @endforeach
+      </div>
+      </div>
+</div>
+
 @endsection

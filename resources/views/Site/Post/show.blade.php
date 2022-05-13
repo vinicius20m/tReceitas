@@ -137,8 +137,11 @@
 
       <div style="padding: 0px" class="form-group row">
             <div  class="col-md-8">
-                  <h1>foto</h1>
-
+                  @if($post->image)
+                  <img src="{{asset('images/posts\\').$post->image}}" width="100%" style="border: 2px solid #ffd66d; border-radius: 35px;">
+                  @else
+                  <h4 class="text-center" style="margin-top: 40px">esta receita não tem foto por enquanto.</h4>
+                  @endif
             </div>
             <div class="form-group col-md-4">
 
@@ -155,7 +158,23 @@
                         <h3 style="left: 43%; position: relative;">rende</h3>
                   </div>
                   <a href="" style="font-size: 34px; color:#ffb600; margin-left: 10px">{{$post->portions}} {{$post->portions > 1 ? 'Porções' : 'Porção'}}</a>
+                  <div class="gap-40"></div>
+                  <div class="gap-40"></div>
                   @endif
+                  <div class="row">
+                        <div class="col-md-6 text-center">
+                              <i class="bi bi-hand-thumbs-up"
+                                    style="color: #ffb600; font-size: 30px;"
+                              ></i>
+                              <span style="font-size: 25px; font-weight: 200;">&nbsp&nbsp{{$post->likes()->wherePivot('value', '=', 1)->count()}}</span>
+                        </div>
+                        <div class="col-md-6 text-center">
+                              <i class="bi bi-hand-thumbs-down"
+                                    style="color: #ffb600; font-size: 30px;"
+                              ></i>
+                              <span style="font-size: 25px; font-weight: 200;">&nbsp&nbsp{{$post->likes()->wherePivot('value', '=', 0)->count()}}</span>
+                        </div>
+                  </div>
             </div>
       </div>
 
@@ -218,7 +237,7 @@
             </div>
       </div>
 
-      <hr>
+      <hr style="background: rgb(63, 63, 63)">
       <div class="gap-40"></div>
       {{-- <div class="gap-40"></div>--}}
 
@@ -346,7 +365,7 @@
 
 
       <div class="gap-20"></div>
-      <hr>
+      <hr style="background: rgb(63, 63, 63)">
       <div class="gap-20"></div>
 
 

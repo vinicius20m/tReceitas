@@ -43,7 +43,7 @@
       </div>
 
       {{-- CREATE FORM --}}
-      <form id="contact-form" action="{{ route('post-store') }}" method="post" role="form">
+      <form id="contact-form" action="{{ route('post-store') }}" method="post" role="form" enctype="multipart/form-data">
             @csrf
             <div style="padding: 0px" class="form-group row">
                   <div  class="col-md-8">
@@ -118,15 +118,26 @@
                   </div>
             </div>
 
-            {{-- ------------------------------------------------------------------------------------------------------ --}}
-
-
-            <div class="gap-40"></div>
             <div class="gap-20"></div>
 
-            {{-- ------------------------------------------------------------------------------------------------------ --}}
+            <div class="form-goup row">
+                  <div style="border: 1px solid rgb(146, 146, 146); border-radius: 5px; margin-left:16px;" class="col-md-2">
+                        <label style="padding-bottom: 10px;">Foto
+                        <input name="image" type="file" class="form-control-file"></label>
+                  </div>
+                  <div class="col-md-10"></div>
+            </div>
+
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
+            <hr>
+            <div class="gap-40"></div>
+            {{-- <div class="gap-20"></div> --}}
+
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
 

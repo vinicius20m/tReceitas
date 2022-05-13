@@ -9,10 +9,33 @@ use App\Models\Stage;
 use App\Models\Step;
 use App\Models\Tag;
 use App\Models\User;
+use CURLFile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage ;
 
 class PostController extends Controller
 {
+
+    public function teste(Request $request)
+    {
+        // $image = $request->image ;
+        // $image = $request->file('image') ;
+        // $extension = $image->extension() ;
+        // $name = 'algum arquivo recebido.'.$extension ;
+        // if($extension == 'png' || $extension == 'jpg' || $extension == 'jpeg')
+        //     $image->move(public_path('images/posts'), $name) ;
+
+        //DROPBOX
+
+        // $result = Storage::put('images', $request->image) ;
+        // $url = Storage::url($result) ;
+        // dd(Storage::makeDirectory('images')) ;
+        // dd($url) ;
+
+        return response('ok') ;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,6 +57,8 @@ class PostController extends Controller
         $categories = Category::all() ;
         $tags = Tag::all() ;
 
+        // return view('Site.Post.teste') ;
+
         return view('Site.Post.create', [
 
             'tags' => $tags,
@@ -53,10 +78,28 @@ class PostController extends Controller
         $form = $request->all() ;
         $form['private'] = (!isset($form['private']))? 0 : 1;
         $form['user_id'] = Auth::id() ;
-
         // dd($form) ;
 
         if($post = Post::create($form)){
+
+            // IMAGE
+            $file = $request->image ;
+            if(isset($file)){
+
+                $extension = $file->extension() ;
+                $validExtensions = [
+                    'png',
+                    'jpg',
+                    'jpeg'
+                ];
+
+                if(in_array($extension, $validExtensions)){
+
+                    $name = 'post-image_'. $post->id. '.'. $extension ;
+                    $file->move(public_path('images/posts'), $name) ;
+                    $post->update(['image' => $name]) ;
+                }
+            }
 
             // TAGS STORE
             if(isset($form['tags']))
