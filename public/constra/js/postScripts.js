@@ -96,10 +96,10 @@ function AddIngredientStep(ingCount)
 
                         <input name="ingredient-step[${ingCount}][]"
                               type="text"
-                              class="form-control"
+                              class="form-control col-md-11"
                               style="max-width: 600px; margin-left: 15px"
                         >
-                        <a href="#ingredient-${ingCount}-step-${step}" class="close" data-dismiss="alert" aria-label="close"
+                        <a href="#ingredient-${ingCount}-step-${step}" class="close col-md-1" data-dismiss="alert" aria-label="close"
                               id="hide" style="margin-left: 40px; margin-top: 10px"
                         >&times;</a>
                   </div>
@@ -185,10 +185,10 @@ function AddPreparationStep(prepCount)
 
                         <input name="preparation-step[${prepCount}][]"
                               type="text"
-                              class="form-control"
+                              class="form-control col-md-11"
                               style="max-width: 600px; margin-left: 15px"
                         >
-                        <a href="#preparation-${prepCount}-step-${step}" class="close" data-dismiss="alert" aria-label="close"
+                        <a href="#preparation-${prepCount}-step-${step}" class="close col-md-1" data-dismiss="alert" aria-label="close"
                               id="hide" style="margin-left: 40px; margin-top: 10px"
                         >&times;</a>
                   </div>

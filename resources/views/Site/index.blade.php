@@ -38,24 +38,62 @@
 <div class="col-md-8 text-center">
       <h2>{{$mainTitle}}</h2>
       <div class="gap-20"></div>
-      <div class="row simple-card">
-            <div class="col-md-1">
+      <div class="row" style="display: flex; justify-content: center">
 
-                  <i class="bi bi-search"></i>
-            </div>
-            <div class="col-md-11">
-
-                  <input class="form-control" type="text">
-            </div>
+      <div class="simple-card search-div">
+            <form action="/" method="GET">
+                  <div class="search-box">
+                        <button class="btn" type="submit"> <i class="bi bi-search"></i> </button>
+                        <input name="search" placeholder="Pesquise..." type="text">
+                  </div>
+            </form>
+      </div>
       </div>
 </div>
 <div class="gap-40"></div>
 
-<div class="simple-card col-md-2"></div>
+<div class=" col-md-2">
+      <div class="simple-card row" style="padding: 10px">
+
+            <style>
+                  ul.profile-items li a {
+                        padding: 10px 0px 10px;
+                  }
+            </style>
+
+            <div class="gap-20"></div>
+            <h4 class="text-center">categorias</h4>
+
+            <ul class="profile-items">
+                  @foreach ($categories as $category)
+
+                  <li>
+                        <a href="/?filterC={{$category->slug}}"> {{$category->title}}</a>
+                  </li>
+                  @endforeach
+            </ul>
+
+            <div class="gap-40"></div>
+            <h4 class="text-center">tags</h4>
+
+            <ul class="profile-items">
+                  @foreach ($tags as $tag)
+
+                  <li>
+                        <a href="/?filterT={{$tag->slug}}"> {{$tag->title}}</a>
+                  </li>
+                  @endforeach
+            </ul>
+      </div>
+</div>
 <div class="col-md-2"></div>
 
-<div class="simple-card col-md-8">
-      <div style="padding: 30px">
+<div class="col-md-8">
+      <div class="simple-card row " style="padding: 30px">
+
+      @if($posts->count() < 1)
+      <h3 class="text-center">Nenhuma receita disponivel</h3>
+      @else
 
       <div class="accordion" id="accordion">
 
@@ -67,10 +105,12 @@
                         <div onclick="window.location='{{route('post-show', $post->slug)}}'" style="padding: 0px; margin-right: 10px; overflow: hidden; border: 2px solid #ffd66d; border-radius: 10px; box-shadow: inset 0px 0px 122px 33px rgba(0,0,0,0.78);" class="col-md-3 header-img">
                               @if($post->image)
                               <img src="{{asset('images/posts\\'. $post->image)}}" width="100%"
-                                    style=" border: 2px solid #ffd66d; border-radius: 10px; box-shadow: inset 0px 0px 122px 33px rgba(0,0,0,0.78);" alt="Sem Foto"
+                                    style=" border: 2px solid #ffd66d; border-radius: 10px;" alt="Sem Foto"
                               >
                               @else
-                              <h4 style="color: antiquewhite; margin-top:40px;" class="text-center">sem foto</h4>
+                              <img src="{{asset('images/posts/semFoto.jpg')}}" width="100%"
+                                    style=" border: 2px solid #ffd66d; border-radius: 10px;" alt="Sem Foto"
+                              >
                               @endif
                         </div>
 
@@ -120,13 +160,32 @@
                                     {{$post->description}}
                               </h4>
                               {{-- <div class="gap-20"></div> --}}
-                              <p style="margin: 0px">Publicada Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a> &nbsp&nbsp&nbsp {{$post->created_at}}</p>
+                              <style>
+                                    p{
+                                          margin: 0px;
+                                    }
+                              </style>
+                              <p>Publicada Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a></p>
+                              <h5 class="text-center">Tags: </h5>
+                              <div class="text-center">
+                                    @foreach ($post->tags as $tag)
+                                    <button
+                                          style="border-radius: 20px; margin: 5px;"
+                                          class="btn btn-outline-warning slim-button"
+                                          onclick="window.location='{{route('begin', 'filterT='.$tag->slug)}}'"
+                                    >{{$tag->title}}</button>
+                                    @endforeach
+                              </div>
                         </div>
                   </div>
             </div>
             <div class="gap-20"></div>
             @endforeach
       </div>
+      <div>
+            {{$posts->links()}}
+      </div>
+      @endif
       </div>
 </div>
 

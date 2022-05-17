@@ -47,16 +47,25 @@
             @csrf
             <div style="padding: 0px" class="form-group row">
                   <div  class="col-md-8">
-                        <div class="form-group">
-                              <label>Titulo <span style="@error('title') color: red @enderror">*</span> </label>
-                              <input id="title" name="title"
-                                    class="form-control form-control-title @error('title') is-invalid @enderror"
-                                    value="{{ old('title') }}" placeholder="Titulo/Nome da Receita"
-                                    type="text" autofocus required
-                              >
-                              @error('title')
-                                    <div style="color: darkorange"> {{ $message }} </div>
-                              @enderror
+                        <div class="form-group row">
+                              <div class="col-md-6">
+
+                                    <label>Titulo <span style="@error('title') color: red @enderror">*</span> </label>
+                                    <input id="title" name="title"
+                                          class="form-control form-control-title @error('title') is-invalid @enderror"
+                                          value="{{ old('title') }}" placeholder="Titulo/Nome da Receita"
+                                          type="text" autofocus required
+                                    >
+                                    @error('title')
+                                          <div style="color: darkorange"> {{ $message }} </div>
+                                    @enderror
+                              </div>
+                              <div class="col-md-6">
+                                    <label>Foto</label>
+                                    <div class="input-group">
+                                          <input name="image" type="file" class="form-control-file">
+                                    </div>
+                              </div>
                         </div>
 
                         <div class="row form-group">
@@ -85,10 +94,11 @@
                                     >
                               </div>
 
-                              <div class="col-md-3 text-center">
+                              <div class="col-md-3 text-center form-check">
                                     <label>Receita Privada?</label>
-                                    <input name="private" class="form-control"
-                                          type="checkbox" value="1"
+                                    <input name="private" class="form-check-input"
+                                          style="margin-top: 35px; font-size: 40px"
+                                          type="checkbox" value="1" id="private"
                                           @if(old('private')) checked @endif
                                     >
                               </div>
@@ -120,19 +130,11 @@
 
             <div class="gap-20"></div>
 
-            <div class="form-goup row">
-                  <div style="border: 1px solid rgb(146, 146, 146); border-radius: 5px; margin-left:16px;" class="col-md-2">
-                        <label style="padding-bottom: 10px;">Foto
-                        <input name="image" type="file" class="form-control-file"></label>
-                  </div>
-                  <div class="col-md-10"></div>
-            </div>
-
             {{-- --------------------------------------------------------------------------------------------------- --}}
             {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
-            <hr>
+            <hr style="background: rgb(63, 63, 63)">
             <div class="gap-40"></div>
             {{-- <div class="gap-20"></div> --}}
 
@@ -144,7 +146,7 @@
 
 
             <div style="padding: 0px" class="form-group row">
-                  <div class="col-md-9" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                  <div class="col-md-9 simple-card">
 
                         <div class="gap-20"></div>
                         <h3 class="text-center"><i class="bi bi-basket"></i> Ingredientes</h3>
@@ -190,10 +192,10 @@
 
                                                       <input name="ingredient-step[1][]"
                                                             type="text"
-                                                            class="form-control"
+                                                            class="form-control col-md-11"
                                                             style="max-width: 600px; margin-left: 15px"
                                                       >
-                                                      <a href="#ingredient-1-step-98" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#ingredient-1-step-98" class="close col-md-1" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>
@@ -236,14 +238,18 @@
             <div class="gap-40"></div>
 
 
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
 
 
             <div style="padding: 0px" class="form-group row">
-                  <div class="col-md-9" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                  <div class="col-md-9 simple-card">
 
                         <div class="gap-20"></div>
                         <h3 class="text-center"><i class="bi bi-hammer"></i> Modo de Preparo</h3>
@@ -288,10 +294,10 @@
       
                                                       <input name="preparation-step[1][]"
                                                             type="text"
-                                                            class="form-control"
+                                                            class="form-control col-md-11"
                                                             style="max-width: 600px; margin-left: 15px"
                                                       >
-                                                      <a href="#preparation-1-step-98" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#preparation-1-step-98" class="close col-md-1" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>

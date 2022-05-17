@@ -78,7 +78,8 @@ class PostController extends Controller
         $form = $request->all() ;
         $form['private'] = (!isset($form['private']))? 0 : 1;
         $form['user_id'] = Auth::id() ;
-        // dd($form) ;
+        $form['image'] = null ;
+        // dd($request->all()) ;
 
         if($post = Post::create($form)){
 
@@ -90,7 +91,8 @@ class PostController extends Controller
                 $validExtensions = [
                     'png',
                     'jpg',
-                    'jpeg'
+                    'jpeg',
+                    'jfif'
                 ];
 
                 if(in_array($extension, $validExtensions)){
@@ -181,6 +183,14 @@ class PostController extends Controller
     public function show(Post $post)
     {
 
+        if($post->private && $post->user->id != Auth::id())
+            return back()->with([
+
+                'error' => true,
+                'message' => 'Sinto Muito. Esta receita é privada.'
+            ]) ;
+
+
         $post->load(['tags', 'user', 'category', 'stages.steps']) ;
         $ingredients = $post->stages->where('type', 'INGREDIENT') ;
         $preparations = $post->stages->where('type', 'PREPARATION') ;
@@ -231,6 +241,29 @@ class PostController extends Controller
 
         $form = $request->all() ;
         $form['private'] = (!isset($form['private']))? 0 : 1 ;
+        $form['image'] = $post->image ;
+
+        // dd($request->all()) ;
+        // IMAGE
+        $file = $request->image ;
+        if(isset($file)){
+
+            $extension = $file->extension() ;
+            $validExtensions = [
+                'png',
+                'jpg',
+                'jpeg',
+                'jfif'
+            ];
+
+            if(in_array($extension, $validExtensions)){
+
+                $name = 'post-image_'. $post->id. '.'. $extension ;
+                // unlink(public_path('images/posts/'.$post->image)) ;
+                $file->move(public_path('images/posts'), $name) ;
+                $form['image'] = $name ;
+            }
+        }
 
         if($post->update($form)){
 

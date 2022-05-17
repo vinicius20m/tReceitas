@@ -50,20 +50,27 @@ $psC = 0 ;
       </div>
 
       {{-- CREATE FORM --}}
-      <form id="contact-form" action="{{ route('post-update', $post->slug) }}" method="post" role="form">
+      <form id="contact-form" action="{{ route('post-update', $post->slug) }}" enctype="multipart/form-data" method="post" role="form">
             @csrf
             <div style="padding: 0px" class="form-group row">
                   <div  class="col-md-8">
-                        <div class="form-group">
-                              <label>Titulo <span style="@error('title') color: red @enderror">*</span> </label>
-                              <input id="title" name="title"
-                                    class="form-control form-control-title @error('title') is-invalid @enderror"
-                                    value="{{ old('title') ?? $post->title }}" placeholder="Titulo/Nome da Receita"
-                                    type="text" autofocus required
-                              >
-                              @error('title')
-                                    <div style="color: darkorange"> {{ $message }} </div>
-                              @enderror
+                        <div class="form-group row">
+                              <div class="col-md-6">
+
+                                    <label>Titulo <span style="@error('title') color: red @enderror">*</span> </label>
+                                    <input id="title" name="title"
+                                          class="form-control form-control-title @error('title') is-invalid @enderror"
+                                          value="{{ old('title') ?? $post->title }}" placeholder="Titulo/Nome da Receita"
+                                          type="text" autofocus required
+                                    >
+                                    @error('title')
+                                          <div style="color: darkorange"> {{ $message }} </div>
+                                    @enderror
+                              </div>
+                              <div class="col-md-6">
+                                    <label>Foto</label>
+                                    <input name="image" type="file" class="form-control-file">
+                              </div>
                         </div>
 
                         <div class="row form-group">
@@ -92,9 +99,10 @@ $psC = 0 ;
                                     >
                               </div>
 
-                              <div class="col-md-3 text-center">
+                              <div class="col-md-3 text-center form-check">
                                     <label>Receita Privada?</label>
-                                    <input name="private" class="form-control"
+                                    <input name="private" class="form-check-input"
+                                          style="margin-top: 35px; font-size: 40px"
                                           type="checkbox" value="1"
                                           @if(old('private') || $post->private) checked @endif
                                     >
@@ -128,22 +136,21 @@ $psC = 0 ;
                   </div>
             </div>
 
-            {{-- ------------------------------------------------------------------------------------------------------ --}}
-
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
             <div class="gap-40"></div>
             <div class="gap-20"></div>
 
-            {{-- ------------------------------------------------------------------------------------------------------ --}}
-
-
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
 
 
 
             <div style="padding: 0px" class="form-group row">
-                  <div class="col-md-9" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                  <div class="col-md-9 simple-card">
 
                         <div class="gap-20"></div>
                         <h3 class="text-center"><i class="bi bi-basket"></i> Ingredientes</h3>
@@ -197,11 +204,11 @@ $psC = 0 ;
 
                                                       <input name="ingredient-step[{{$iC}}][]"
                                                             type="text"
-                                                            class="form-control"
+                                                            class="form-control col-md-11"
                                                             style="max-width: 600px; margin-left: 15px"
                                                             value="{{$step->content}}"
                                                       >
-                                                      <a href="#ingredient-{{$iC}}-step-{{$isC}}" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#ingredient-{{$iC}}-step-{{$isC}}" class="close col-md-1" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>
@@ -247,13 +254,18 @@ $psC = 0 ;
 
 
 
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+
+            {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
 
 
 
 
 
             <div style="padding: 0px" class="form-group row">
-                  <div class="col-md-9" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                  <div class="col-md-9 simple-card">
 
                         <div class="gap-20"></div>
                         <h3 class="text-center"><i class="bi bi-hammer"></i> Modo de Preparo</h3>
@@ -307,11 +319,11 @@ $psC = 0 ;
       
                                                       <input name="preparation-step[{{$pC}}][]"
                                                             type="text"
-                                                            class="form-control"
+                                                            class="form-control col-md-11"
                                                             style="max-width: 600px; margin-left: 15px"
                                                             value="{{$step->content}}"
                                                       >
-                                                      <a href="#preparation-{{$pC}}-step-{{$psC}}" class="close" data-dismiss="alert" aria-label="close"
+                                                      <a href="#preparation-{{$pC}}-step-{{$psC}}" class="close col-md-1" data-dismiss="alert" aria-label="close"
                                                             id="hide" style="margin-left: 40px; margin-top: 10px"
                                                       >&times;</a>
                                                 </div>

@@ -62,7 +62,7 @@
 
                 <!-- Header start -->
                 <header id="header" class="header-two" style="background-color: #7858003b; padding-bottom: 6px; padding-top: 10px">
-                <div class="site-navigation" style="background-color: #ebca76d1">
+                <div class="site-navigation" style="background-color: #ebca76d1; box-shadow: 0px 10px 13px -7px #7a6730, 5px 5px 15px 5px rgb(118 100 49 / 42%)">
                         <div class="container">
                         <div class="row">
                                 <div class="col-lg-12">
@@ -72,7 +72,7 @@
 
                                         </div><!-- logo end -->
 
-                                        <a class="navbar-brand" href="{{ url('/') }}">
+                                        <a style="font-size: 30px; font-weight:600" class="navbar-brand" href="{{ url('/') }}">
                                                 {{ config('app.name', 'Receitas') }}
                                         </a>
 
@@ -84,28 +84,15 @@
 
                                         <div id="navbar-collapse" class="collapse navbar-collapse">
                                         <ul class="nav navbar-nav ml-auto align-items-center">
-                                                {{-- <li class="nav-item dropdown">
-                                                <a href="constra/#" class="nav-link dropdown-toggle" data-toggle="dropdown">News <i
-                                                        class="fa fa-angle-down"></i></a>
-                                                <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="constra/news-left-sidebar.html">News Left Sidebar</a></li>
-                                                        <li><a href="constra/news-right-sidebar.html">News Right Sidebar</a></li>
-                                                        <li><a href="constra/news-single.html">News Single</a></li>
-                                                </ul>
-                                                </li> --}}
-                                                {{--
-
-                                                <li class="nav-item"><a class="nav-link"
-                                                        href="{{route('site.contact')}}">Contato</a>
-                                                </li> --}}
-
+                                                @auth
+                                                @if(Auth::user()->type != 'USER')
                                                 <li class="nav-item"><a class="nav-link"
                                                         href="{{route('category')}}">Categorias</a>
                                                 </li>
                                                 <li class="nav-item"><a class="nav-link"
                                                         href="{{route('tag')}}">Tags</a>
                                                 </li>
-                                                @auth
+                                                @endif
                                                 <li class="header-get-a-quote">
                                                         <a class="btn btn-primary" href="{{route('post-create')}}">Nova Receita</a>
                                                 </li>
@@ -116,13 +103,13 @@
                                                 @guest
                                                     @if (Route::has('login'))
                                                         <li class="nav-item">
-                                                            <a class="nav-link" style="font-size: 11px" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                                            <a class="nav-link" style="font-size: 11px" href="{{ route('login') }}">{{ __('Entrar') }}</a>
                                                         </li>
                                                     @endif
 
                                                     @if (Route::has('register'))
                                                         <li class="nav-item">
-                                                            <a class="nav-link" style="font-size: 11px" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                                            <a class="nav-link" style="font-size: 11px" href="{{ route('register') }}">{{ __('Registrar') }}</a>
                                                         </li>
                                                     @endif
                                                 @else
@@ -142,7 +129,7 @@
                                                                 <a class="dropdown-item" style="font-size: 11px" href="{{ route('logout') }}"
                                                                 onclick="event.preventDefault();
                                                                                 document.getElementById('logout-form').submit();">
-                                                                        {{ __('Logout') }}
+                                                                        {{ __('Sair') }}
                                                                 </a>
 
                                                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

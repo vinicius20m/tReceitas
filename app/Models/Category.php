@@ -42,7 +42,7 @@ class Category extends Model
                 return ;
         }
 
-        $occurrences = $this::withTrashed()->whereTitle($title)->latest()->get() ;
+        $occurrences = $this::withTrashed()->whereTitle($title)->latest('id')->get() ;
         $count = $occurrences->count() ;
         if($count > 0){
             if($count > 1)

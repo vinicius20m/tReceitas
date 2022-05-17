@@ -18,7 +18,7 @@
       <div class="row">
 
             <div class="col-md-6" >
-                  Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a> &nbsp&nbsp&nbsp {{$post->created_at}}
+                  Publicada Por : &nbsp&nbsp <a href="{{route('profile-show', $post->user->slug)}}" style="color: #ffb600">{{$post->user->name}}</a>
             </div>
             <div class="col-md-6" >
                   @auth
@@ -67,9 +67,9 @@
                   <div class="row">
                         <div class="col-md-7">
                               @if ($post->favorites->contains('id', Auth::id()))
-                              <button id="favorite-btn" class="btn btn-warning" onclick="Favorite(false)">Retirar Favorito</button>
+                              <button id="favorite-btn" class="btn btn-warning" onclick="Favorite(false)"><i class="bi bi-star-fill">Retirar Favorito</i> </button>
                               @else
-                              <button id="favorite-btn" class="btn btn-warning" onclick="Favorite(true)">Marcar Favorito</button>
+                              <button id="favorite-btn" class="btn btn-outline-warning" onclick="Favorite(true)"><i class="bi bi-star">Marcar Favorito</i> </button>
                               @endif
                         </div>
                         <div class="col-md-5">
@@ -148,7 +148,7 @@
                   <div class="row">
                         <h3 style="left: 37%; position: relative;">categoria</h3>
                   </div>
-                  <a href="" style="font-size: 34px; color:#ffb600; margin-left: 10px">{{$post->category->title}}</a>
+                  <a href="{{route('begin', 'filterC='.$post->category->slug)}}" style="font-size: 34px; color:#ffb600; margin-left: 10px">{{$post->category->title}}</a>
 
                   <div class="gap-40"></div>
 
@@ -190,7 +190,7 @@
 
 
       <div style="justify-content: center;" class="form-group row">
-            <div class="col-md-11" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+            <div class="col-md-11 simple-card">
 
                   @if ($post->tags->count() > 0)
                   <h3 style="padding-top: 20px" class="text-center"><i class="bi bi-tags"></i> Tags</h3>
@@ -210,6 +210,7 @@
                               <button
                                     style="border-radius: 20px; margin: 5px;"
                                     class="btn btn-outline-warning slim-button"
+                                    onclick="window.location='{{route('begin', 'filterT='.$tag->slug)}}'"
                               >{{$tag->title}}</button>
                               @endforeach
                         </div>
@@ -245,7 +246,7 @@
 
 
       <div style="justify-content: center;" class="form-group row">
-            <div class="col-md-11" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+            <div class="col-md-11 simple-card">
 
                   <div class="gap-20"></div>
                   <h3 class="text-center"><i class="bi bi-basket"></i> Ingredientes</h3>
@@ -307,7 +308,7 @@
 
 
       <div style="justify-content: center;" class="form-group row">
-            <div class="col-md-11" style="background: #ffeec8a6; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+            <div class="col-md-11 simple-card">
 
                   <div class="gap-20"></div>
                   <h3 class="text-center"><i class="bi bi-hammer"></i> Modo de Preparo</h3>
@@ -379,6 +380,8 @@
             <div class="simple-card col-md-11">
                   <div class="gap-40"></div>
                   <h3 class="text-center"><i class="bi bi-chat-square-text"></i> Comentários</h3>
+                  @auth
+
                   <div class="gap-40"></div>
                   <div class="row" style="justify-content: center">
                         <div  class="col-md-11">
@@ -399,6 +402,7 @@
                               ></textarea>
                         </div>
                   </div>
+                  @endauth
                   <div class="gap-20"></div>
                   <hr style="background: rgb(63, 63, 63)">
                   <div class="gap-40"></div>
@@ -456,6 +460,7 @@
 @section('scripts')
       <script src="{{asset('constra/js/postScripts.js')}}"></script>
 
+      @auth
       <script>
 
             var c1 = 0
@@ -470,7 +475,14 @@
                   else
                         v1 = value
 
-                  $('#favorite-btn').text(!value?'Marcar Favorito':'Retirar Favorito')
+                  favBtn = $('#favorite-btn')
+
+                  favBtn.children().text(!value?'Marcar Favorito':'Retirar Favorito')
+                  favBtn.children().toggleClass('bi bi-star-fill')
+                  favBtn.children().toggleClass('bi bi-star')
+
+                  favBtn.toggleClass('btn btn-outline-warning')
+                  favBtn.toggleClass('btn btn-warning')
 
                   axios.post('{{route('favorite')}}', {
 
@@ -620,4 +632,15 @@
                   })
             }
       </script>
+
+
+
+
+
+
+
+
+
+
+      @endauth
 @endsection

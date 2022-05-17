@@ -23,6 +23,12 @@ class Post extends Model
         'image'
     ] ;
 
+    public static function publics()
+    {
+
+        return Post::where('private', '=', '0') ;
+    }
+
     // BELONGS TO
 
     public function category()
@@ -100,7 +106,7 @@ class Post extends Model
             }
         }
 
-        $occurrences = $this::withTrashed()->whereTitle($title)->latest()->get() ;
+        $occurrences = $this::withTrashed()->whereTitle($title)->latest('id')->get() ;
         $count = $occurrences->count() ;
         // dd($occurrences) ;
         if($count > 0){

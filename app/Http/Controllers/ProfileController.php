@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,7 @@ class ProfileController extends Controller
     public function update(Request $request, User $user)
     {
 
+        // CHECKS IF THE USER IS LOGED IN
         if(!Auth::check())
             return back()->with([
 
@@ -44,7 +46,7 @@ class ProfileController extends Controller
                 'message' => 'Sinto Muito, Você precisa entrar com sua conta.'
             ])
         ;
-
+        //CHECKS IF THE USER IS TRYING TO UPDATE THEIR OWN ACCOUNT
         if(!isset($user) || $user->id != Auth::id())
         return back()->with([
 
@@ -55,8 +57,34 @@ class ProfileController extends Controller
         $form = [
 
             'name' => $request->input('name'),
-            'about' => $request->input('about')
+            'about' => $request->input('about'),
+            'image' => $user->image
         ] ;
+
+        // IMAGE
+        $file = $request->image ;
+        if(isset($file)){
+
+            $extension = $file->extension() ;
+            $validExtensions = [
+                'png',
+                'jpg',
+                'jpeg',
+                'jfif'
+            ];
+
+            if(in_array($extension, $validExtensions)){
+
+                $name = 'user-image_'. $user->id. '.'. $extension ;
+                // unlink(public_path('images/posts/'.$post->image)) ;
+                $file->move(public_path('images/users'), $name) ;
+                $form['image'] = $name ;
+            }else return back()->with([
+
+                'error' => true,
+                'message' => 'Sinto Muito, Formato de imagem não suportado.'
+            ]);
+        }
 
         if($user->update($form))
             return redirect(route('profile-show', $user->slug))->with([
@@ -89,10 +117,12 @@ class ProfileController extends Controller
         ;
 
         $user = Auth::user() ;
+        $posts = Post::where('user_id','=', $user->id)->latest('id')->paginate(15) ;
 
         return view('Site.Profile.my-posts', [
 
-            'user' => $user
+            'user' => $user,
+            'posts' => $posts
         ]) ;
     }
 

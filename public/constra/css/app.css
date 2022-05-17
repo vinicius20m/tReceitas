@@ -1,6 +1,23 @@
 
-.slim-button {
 
+/* CUSTOM LINK */
+.simple-link:hover {
+      cursor: pointer;
+      color: #ffb600;
+      transition: 0.15s;
+}
+
+/* PAGINATION */
+.pagination {
+
+      display: flex;
+      padding-left: 0px;
+      list-style: none;
+      border-radius: 0.25rem;
+      justify-content: center;
+}
+/*  */
+.slim-button {
       padding: 1px 10px 1px;
 }
 
@@ -8,6 +25,7 @@ div.simple-card{
 
       background: #ffeec8a6;
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+      border-radius: 15px;
 }
 
 div.simple-container{
@@ -22,13 +40,11 @@ div.simple-container{
 
 /* profile simple-menu */
 ul.profile-items {
-
       list-style: none;
       padding: 0px;
 }
 
 ul.profile-items li {
-
       border-bottom: 2px solid #d9ac4c;
 }
 
@@ -46,8 +62,8 @@ ul.profile-items li a:hover, ul.profile-items li a.selected-item {
       font-weight:300;
 }
 
-ul.profile-items li a.selected-item{
 
+ul.profile-items li a.selected-item{
       border-left: 3px solid #ffdc86;
 }
 
@@ -75,4 +91,69 @@ ul.profile-items li a.selected-item{
 
       transform: scale(1.15, 1.15);
       z-index: 9;
+}
+
+/* SEARCH */
+
+.search-div {
+
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 20px;
+      width: 390px;
+}
+
+.search-box {
+
+      /* position: absolute; */
+
+      background: #fff;
+      height: 50px;
+      padding: 10px;
+      border-radius: 40px;
+      padding: 0;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+}
+
+.search-box input{
+
+      background: none;
+      border: 0;
+      outline: 0;
+
+      font-size: 16px;
+
+      transition: 0.4s;
+
+      width: 0;
+      padding: 0 0 0 5px;
+}
+
+.search-box button{
+
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+
+      color: #ffd66d;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+}
+
+.search-box:hover > input{
+      width: 320px;
+}
+
+.search-box:hover > .search-div {
+      width: 320px;
+}
+
+.search-box:hover > button{
+      background: #ffdc86;
+      color: #fff;
 }

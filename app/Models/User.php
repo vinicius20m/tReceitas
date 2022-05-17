@@ -25,6 +25,7 @@ class User extends Authenticatable
         'slug',
         'email',
         'about',
+        'image',
         'password',
     ];
 
@@ -100,7 +101,7 @@ class User extends Authenticatable
                 return ;
         }
 
-        $occurrences = $this::withTrashed()->whereName($name)->latest()->get() ;
+        $occurrences = $this::withTrashed()->whereName($name)->latest('id')->get() ;
         $count = $occurrences->count() ;
         if($count > 0){
             if($count > 1)

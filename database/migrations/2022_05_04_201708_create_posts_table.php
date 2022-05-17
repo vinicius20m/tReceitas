@@ -17,7 +17,7 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('title') ;
             $table->string('slug')->unique() ;
-            $table->string('description')->nullable() ;
+            $table->text('description')->nullable() ;
             $table->integer('portions')->nullable() ;
             $table->boolean('private')->default(0) ;
             $table->foreignId('user_id')->constrained() ;

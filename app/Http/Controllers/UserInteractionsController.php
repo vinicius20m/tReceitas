@@ -70,15 +70,25 @@ class UserInteractionsController extends Controller
 
         $user = User::find($user_id) ;
 
+        $likeRR = [] ;
+        foreach($user->likedPosts as $like){
+
+            $likeRR[$like->id] = [] ;
+        }
+        $likeRR[$post_id] = ['value' => $value?1:0] ;
+
         if($remove)
-            $user->likedPosts()->sync([]) ;
+            $user->likedPosts()->detach($post_id) ;
         else
-            $user->likedPosts()->sync([$post_id => ['value' => $value?1:0]]) ;
+            $user->likedPosts()->sync($likeRR) ;
 
 
         return response()->json([
 
             'message' => $remove?'Neutro':($value?'Gostei':'Não Gostei'),
+            'post' => $post_id,
+            'user' => $user_id,
+            // 'likes' => response()->json($likeRR)
         ], 200) ;
     }
 
